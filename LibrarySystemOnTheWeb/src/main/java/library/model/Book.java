@@ -58,5 +58,7 @@ public class Book {
         this.qntyAvail = qntyAvail;
     }
     
-    
+    public boolean isAvailable(){
+        return qntyAvail > 0;
+    }
 }

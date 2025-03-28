@@ -1,4 +1,9 @@
+library\data\ConnectionPool.class
+library\data\BorrowDb.class
+library\data\MemberDb.class
 library\model\BorrowedBook.class
-library\servlets\BorrowAndReturn.class
 library\model\Book.class
 library\model\Borrower.class
+library\data\BookDb.class
+library\controller\LibraryController.class
+library\data\DBUtil.class

@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,8 +10,9 @@
     <body>
         <nav>
             <a href="index.jsp">Home</a>
-            <a href="books">View Books</a>
-            <a href="borrowers.jsp">Borrowers</a>
-            <a href="borrowAndReturn.jsp">Borrow / Return</a>
-            <a href="stats.jsp">Statistics</a>
+            <a href="library?action=books">Available Books</a>
+            <a href="library?action=borrowers">Borrowers</a>
+            <a href="library?action=borrow">Borrow</a>
+            <a href="library?action=return">Return</a>
+            <a href="library?action=stats">Statistics</a>
         </nav>
