@@ -18,10 +18,8 @@ public class ConnectionPool {
         try {
             InitialContext ic = new InitialContext();
             dataSource = (DataSource) ic.lookup("java:/comp/env/jdbc/library");
-
-            log("✅ JNDI Lookup succeeded: DataSource initialized.");
         } catch (NamingException e) {
-            logException("❌ JNDI Lookup FAILED:", e);
+            System.out.println(e);
         }
     }
 
@@ -34,41 +32,18 @@ public class ConnectionPool {
 
     public Connection getConnection() {
         try {
-            Connection conn = dataSource.getConnection();
-            log("✅ Successfully got a DB connection.");
-            return conn;
+            return dataSource.getConnection();
         } catch (SQLException e) {
-            logException("❌ Failed to get DB connection:", e);
+            System.out.println(e);
             return null;
         }
     }
 
     public void freeConnection(Connection c) {
         try {
-            if (c != null) {
-                c.close();
-            }
+            c.close();
         } catch (SQLException e) {
-            logException("⚠️ Error while closing connection:", e);
-        }
-    }
-
-    // Helper method to log simple messages
-    private void log(String message) {
-        try (PrintWriter out = new PrintWriter(new FileWriter("C:/temp/db-connection-debug.log", true))) {
-            out.println(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Helper method to log exceptions with a label
-    private void logException(String label, Exception e) {
-        try (PrintWriter out = new PrintWriter(new FileWriter("C:/temp/db-connection-debug.log", true))) {
-            out.println(label);
-            e.printStackTrace(out);
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
+            System.out.println(e);
         }
     }
 }

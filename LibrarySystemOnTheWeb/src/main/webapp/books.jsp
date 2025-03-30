@@ -1,4 +1,10 @@
 <%@include file="header.jsp" %>
+<section>
+    <h1> Add a book to the database below:</h1>
+    <form action="newBook.jsp" method="get" style="margin-top: 20px;">
+        <input type="submit" value="Add New Book" />
+    </form>
+</section>
 <section> 
     <h1> All Books in the Library </h1>
     <table>

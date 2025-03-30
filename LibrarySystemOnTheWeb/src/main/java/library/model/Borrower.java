@@ -1,4 +1,6 @@
 package library.model;
+import java.sql.Date;
+
 
 /**
  *
@@ -9,13 +11,13 @@ public class Borrower {
     private String name;
     private String email;
     private String phone;
-    private String membershipDate; // maybe use java.sql.Date?
+    private Date membershipDate; // maybe use java.sql.Date?
 
     // Constructors
     public Borrower() {
     }
 
-    public Borrower(int borrowerId, String name, String email, String phone, String membershipDate) {
+    public Borrower(int borrowerId, String name, String email, String phone, Date membershipDate) {
         this.borrowerId = borrowerId;
         this.name = name;
         this.email = email;
@@ -52,10 +54,10 @@ public class Borrower {
         this.phone = phone;
     }
 
-    public String getMembershipDate() {
+    public Date getMembershipDate() {
         return membershipDate;
     }
-    public void setMembershipDate(String membershipDate) {
+    public void setMembershipDate(java.sql.Date membershipDate) {
         this.membershipDate = membershipDate;
     }
     
