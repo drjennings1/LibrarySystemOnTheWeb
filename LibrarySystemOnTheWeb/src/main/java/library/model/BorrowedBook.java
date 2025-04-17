@@ -10,6 +10,8 @@ public class BorrowedBook {
     private int bookId;
     private String borrowDate;
     private String returnDate;
+    private boolean returned;
+    private Book book;
 
     // Constructors
     public BorrowedBook() {}
@@ -58,6 +60,18 @@ public class BorrowedBook {
         this.returnDate = returnDate;
     }
     
+    public boolean isReturned() {
+        return returned;
+    }
+    public void setReturned(boolean returned) {
+        this.returned = returned;
+    }
     
+    public Book getBook() {
+        return book;
+    }
+    public void setBook(Book book) {
+        this.book = book;
+    }
     
 }

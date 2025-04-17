@@ -1,13 +1,13 @@
 <%@include file="header.jsp" %>
-<section>
-    <h1> Add a book to the database below:</h1>
+
     <form action="newBook.jsp" method="get" style="margin-top: 20px;">
-        <input type="submit" value="Add New Book" />
+        <input type="submit" value="Add New Book to Library" />
     </form>
-</section>
-<section> 
+    <form action="removeBook.jsp" method="get" style="margin-top: 20px;">
+        <input type="submit" value="Remove a book from the Library" />
+    </form>
     <h1> All Books in the Library </h1>
-    <table>
+    <table border="1">
         <tr>
             <th>Book ID</th>
             <th>Title</th>
@@ -26,15 +26,22 @@
             <td class="noneAvailable">
                 <c:choose>
                     <c:when test="${!book.available}">
-                        <img src="images/noneAvailable.png"/>
+                        <img src="images/notAvailable.png" height="20" width="20"/>
                     </c:when>
                     <c:otherwise>
-                        &nbsp;
+                        <img src="images/available.png" height="20" width="20"/>
                     </c:otherwise>
                 </c:choose>
+            </td>
+            <td>
+                <form action="library" method="get">
+                    <input type="hidden" name="action" value="changeQnty"/>
+                    <input type="hidden" name="bookId" value="${book.bookId}"/>
+                    <input type="hidden" name="title" value="${book.title}"/>
+                    <input type ="submit" value="Change Quantity"/>
+                </form>
             </td>
         </tr>
         </c:forEach>
     </table>
-</section>
 <%@include file="footer.jsp" %>
