@@ -18,5 +18,10 @@
 
         <input type="submit" value="Save Book" />
     </form>
+        
+    <c:if test="${not empty error}">
+    <p style="color: red;">${error}</p>
+    </c:if>
+        
 </section>
 <%@ include file="footer.jsp" %>

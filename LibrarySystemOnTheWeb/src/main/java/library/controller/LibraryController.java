@@ -61,6 +61,12 @@ public class LibraryController extends HttpServlet {
             case "borrowers":
                 url = showAllMembers(request);
                 break;
+            case "newMember":
+                url = loadNewMemberPage(request);
+                break;
+            case "newBook":
+                url = loadNewBookPage(request);
+                break;
             case "checkout":
                 url = loadCheckoutPage(request);
                 break;
@@ -143,12 +149,47 @@ public class LibraryController extends HttpServlet {
         return "/books.jsp";
     }
     
+    private String loadNewBookPage(HttpServletRequest request){
+        String error = request.getParameter("error");
+        if (error != null){
+            switch (error){
+                case "invalidAuthor":
+                    request.setAttribute("error", "Author cannot contain numberic characters.");
+                    break;
+                case "invalidGenre":
+                    request.setAttribute("error", "Genre cannot contain numeric characters.");
+                    break;
+                case "invalidQuantity":
+                    request.setAttribute("error", "Quantity must be above 0.");
+                    break;
+                case "invalidNumber":
+                    request.setAttribute("error", "Quantity must only contain numeric characters.");
+                    break;
+            }
+        }
+        
+        return "/newBook.jsp";
+    }
     private void addBook(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String title = request.getParameter("title");
         String author = request.getParameter("author");
         String genre = request.getParameter("genre");
         int qntyAvail = Integer.parseInt(request.getParameter("qntyAvail"));
         
+        if (author.matches(".*\\d.*")){
+            response.sendRedirect("library?action=newBook&error=invalidAuthor");
+            return;
+
+        } else if (genre.matches(".*\\d.*")){
+            response.sendRedirect("library?action=newBook&error=invalidGenre");
+            return;
+        }
+       
+        if (qntyAvail < 0){
+            response.sendRedirect("library?action=newBook&error=invalidQuantity");
+            return;
+        }
+
         Book book = new Book();
         book.setTitle(title);
         book.setAuthor(author);
@@ -177,14 +218,25 @@ public class LibraryController extends HttpServlet {
         request.setAttribute("bookId", bookId);
         request.setAttribute("title", title);
         
+        // this part is the output for the changeQnty validation
+        String error = request.getParameter("error");
+        if (error!= null){
+            if (error.equals("negative")){
+                request.setAttribute("error", "Quantity can't be negative.");
+            }
+        }
         return "/changeQnty.jsp";
     }
     
     private void changeQnty(HttpServletRequest request, HttpServletResponse response) throws IOException{
         int bookId = Integer.parseInt(request.getParameter("bookId"));
         int qnty = Integer.parseInt(request.getParameter("avail_qnty"));
+        if (qnty < 0) {
+            // Redirect with error in URL
+            response.sendRedirect("library?action=changeQnty&bookId=" + bookId + "&error=negative"); // reload page w/ error
+            return;
+        }
         BookDb.changeQnty(bookId, qnty);
-        
         response.sendRedirect("library?action=books");
     }
 
@@ -194,24 +246,57 @@ public class LibraryController extends HttpServlet {
         request.setAttribute("borrowerList", borrowers);
         return "/borrowers.jsp";
     }
-    
+    private String loadNewMemberPage(HttpServletRequest request){
+        String error = request.getParameter("error");
+        if(error != null){
+            switch (error){
+                case "invalidPhone":
+                    request.setAttribute("error", "Phone number field needs to be 10 numeric digits.");
+                    break;
+                case "invalidName":
+                    request.setAttribute("error", "Numeric characters not allowed in name.");
+                    break;
+                case "invalidEmail":
+                    request.setAttribute("error", "The Email entered is not valid.");
+                    break;
+                }
+        }
+        return "/newMember.jsp";
+    }
     private void addBorrower(HttpServletRequest request, HttpServletResponse response) throws IOException{
         String name = request.getParameter("name");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
+        // validation
+            // validating that the name doesn't contain any numbers
+        if (name.matches(".*\\d.*")){
+            response.sendRedirect("library?action=newMember&error=invalidName"); // reload page w/ error
+            return;
+            // validating phone is 10 digits
+        } else if (!phone.matches("\\d{10}")){
+            response.sendRedirect("library?action=newMember&error=invalidPhone"); // reload page w/ error
+            return;
+        // validates that the email: contains only one or more characters, dots, or hyphens. 
+        // has an @. something exists between @ and the ".". and at least 2 letters for the domain extension.
+        } else if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")){
+            response.sendRedirect("library?action=newMember&error=invalidEmail"); // reload page w/ error
+            return;
+        }
         java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
         
+        // putting phone into 333-333-4444 format for clean, consistent appearance
+        String formattedPhone = phone.replaceFirst("(\\d{3})(\\d{3})(\\d{4})", "$1-$2-$3");
         Borrower borrower = new Borrower();
         borrower.setName(name);
         borrower.setEmail(email);
-        borrower.setPhone(phone);
+        borrower.setPhone(formattedPhone);
         borrower.setMembershipDate(today);
         BorrowerDb.insert(borrower);
         
         response.sendRedirect("library?action=borrowers");
     }
     
-//--------------------Checkout methods----------------//
+//--------------------Checkout book methods----------------//
     
     private String loadCheckoutPage(HttpServletRequest request){
         int borrowerId = Integer.parseInt(request.getParameter("borrowerId"));
@@ -291,7 +376,7 @@ public class LibraryController extends HttpServlet {
         response.sendRedirect("library?action=borrowers");
     }
     
-//--------------------Return methods----------------//
+//--------------------Return book methods----------------//
     private String loadReturnPage(HttpServletRequest request){
         int borrowerId = Integer.parseInt(request.getParameter("borrowerId"));
         List<BorrowedBook> checkedOut = BorrowedBookDb.selectCurrentCheckouts(borrowerId);

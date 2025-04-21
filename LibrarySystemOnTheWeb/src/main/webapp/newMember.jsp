@@ -15,5 +15,10 @@
 
         <input type="submit" value="Add Member" />
     </form>
+    
+    <c:if test="${not empty error}">
+    <p style="color: red;">${error}</p>
+    </c:if>
+        
 </section>
 <%@ include file="footer.jsp" %>

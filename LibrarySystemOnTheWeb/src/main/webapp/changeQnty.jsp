@@ -7,4 +7,7 @@
         <input type="number" name="avail_qnty" required/>
         <input type="submit" value="Change"/>
     </form>
+    <c:if test="${not empty error}">
+        <p style="color: red;">${error}</p>
+    </c:if>
 <%@include file="footer.jsp" %>
