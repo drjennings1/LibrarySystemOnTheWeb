@@ -1,24 +1,32 @@
 <%@ include file="header.jsp" %>
-<section>
-    <h1>Add a New Member</h1>
-    <form action="library" method="post">
-        <input type="hidden" name="action" value="addBorrower" />
-
-        <label>Name:</label>
-        <input type="text" name="name" required /><br>
-
-        <label>Email:</label>
-        <input type="text" name="email" required /><br>
-
-        <label>Phone:</label>
-        <input type="text" name="phone" required /><br>
-
-        <input type="submit" value="Add Member" />
-    </form>
+<section class="content-wrapper">
     
+<h1 class="text-center">Add a New Member</h1>
+<div class="row">
+    <div class="col-10 col-md-6 offset-md-2">
+        <form action="library" method="post">
+            <input type="hidden" name="action" value="addBorrower" />
+            <div class="form-row mb-3" >
+                    <label class="form-label">Name:</label>
+                    <input type="text" name="name" required />
+            </div>
+            <div class="form-row mb-3">
+                    <label class="form-label">Email:</label>
+                    <input type="text" name="email" required />
+            </div>
+            <div class="form-row mb-3">
+                    <label class="form-label">Phone:</label>
+                    <input type="text" name="phone" required />
+            </div>
+                    <input type="submit" value="Add Member" class="btn btn-success" />
+        </form>
+    </div> <!-- column div -->
+</div> <!-- row div-->
     <c:if test="${not empty error}">
-    <p style="color: red;">${error}</p>
+        <div class="alert alert-danger" role="alert">
+                ${error}
+        </div>
     </c:if>
         
-</section>
+</section><!-- end content wrapper -->
 <%@ include file="footer.jsp" %>

@@ -284,7 +284,7 @@ public class LibraryController extends HttpServlet {
         }
         java.sql.Date today = new java.sql.Date(System.currentTimeMillis());
         
-        // putting phone into 333-333-4444 format for clean, consistent appearance
+        // putting phone into 333-333-4444 format for consistent appearance and table input
         String formattedPhone = phone.replaceFirst("(\\d{3})(\\d{3})(\\d{4})", "$1-$2-$3");
         Borrower borrower = new Borrower();
         borrower.setName(name);
@@ -315,7 +315,7 @@ public class LibraryController extends HttpServlet {
         int bookId = Integer.parseInt(request.getParameter("bookId"));
         int borrowerId = Integer.parseInt(request.getParameter("borrowerId"));
         Book bookToAdd = BookDb.selectBookById(bookId);
-        
+
         HttpSession session = request.getSession();
         List<Book> basket = (List<Book>) session.getAttribute("basket");
         
@@ -331,15 +331,15 @@ public class LibraryController extends HttpServlet {
                 break;
             }
         }
-        if (!alreadyInBasket){
-            basket.add(bookToAdd);
-        }
         
-        session.setAttribute("basket", basket);
-        request.setAttribute("borrowerId", borrowerId);
-        request.setAttribute("bookList", BookDb.selectAll());
-        request.setAttribute("basket", basket);
-        response.sendRedirect("library?action=checkout&borrowerId=" + borrowerId);
+        if (!alreadyInBasket) {
+            basket.add(bookToAdd);
+            session.setAttribute("basket", basket);
+            response.sendRedirect("library?action=checkout&borrowerId=" + borrowerId);
+        } else {
+            session.setAttribute("basket", basket);
+            response.sendRedirect("library?action=checkout&borrowerId=" + borrowerId + "&error=copyExists");
+        }
     }
     
     private void removeFromBasket(HttpServletRequest request, HttpServletResponse response) throws IOException {

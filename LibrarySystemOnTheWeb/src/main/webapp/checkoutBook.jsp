@@ -1,7 +1,8 @@
 <%@ include file="header.jsp" %>
-
-<h2>Available Books</h2>
-<table border="1">
+<section class="content-wrapper">
+<h2 class="text-center">Available Books</h2>
+<div class="table-responsive">
+<table class="table table-bordered">
     <tr>
         <th>Title</th>
         <th>Author</th>
@@ -23,7 +24,7 @@
                             <input type="hidden" name="action" value="addToBasket">
                             <input type="hidden" name="bookId" value="${book.bookId}">
                             <input type="hidden" name="borrowerId" value="${borrowerId}">
-                            <input type="submit" value="Add to Basket">
+                            <input type="submit" value="Add to Basket" class="btn btn-primary w-100-mobile">
                         </form>
                     </c:otherwise>
                 </c:choose>
@@ -32,8 +33,10 @@
     </c:forEach>
 </table>
 
+</div> <!-- Table responsive div -->
 <h2>Basket</h2>
-<table border="1">
+<div class="table-responsive">
+<table class="table table-bordered">
     <tr>
         <th>Title</th>
         <th>Author</th>
@@ -48,13 +51,13 @@
                     <input type="hidden" name="action" value="removeFromBasket">
                     <input type="hidden" name="bookId" value="${book.bookId}">
                     <input type="hidden" name="borrowerId" value="${borrowerId}">
-                    <input type="submit" value="Remove">
+                    <input type="submit" value="Remove" class="btn btn-primary w-100-mobile">
                 </form>
             </td>
         </tr>
     </c:forEach>
 </table>
-
+</div> <!-- Table responsive div -->
 <!-- Main form for completing checkout: placed after the table -->
 <form action="library" method="post">
     <input type="hidden" name="action" value="completeCheckout">
@@ -65,8 +68,12 @@
         <input type="hidden" name="bookId[]" value="${book.bookId}" />
     </c:forEach>
 
-    <input type="submit" value="Complete Checkout">
+    <input type="submit" value="Complete Checkout" class="btn btn-success w-100-mobile">
 </form>
-
-
+    <c:if test="${param.error == 'copyExists'}">
+        <div class="alert alert-danger" role="alert">
+                You can only check out 1 of each book.
+        </div>
+    </c:if>
+</section><!-- end content wrapper -->
 <%@ include file="footer.jsp" %>
